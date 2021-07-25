@@ -1,0 +1,19 @@
+docker compose down
+
+docker compose up -d
+
+config = {
+  "_id": "mdbDefGuide",
+  "members": [{
+    "_id": 0,
+    "host": "mongo-primary"
+  }, {
+    "_id": 1,
+    "host": "mongo-secondary"
+  }, {
+    "_id": 2,
+    "host": "mongo-secondary2",
+  }]
+}
+
+rs.initiate(config)

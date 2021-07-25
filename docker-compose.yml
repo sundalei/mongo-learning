@@ -1,20 +1,33 @@
 # Use root/example as user/password credentials
+# https://trainto.me/docker-mongodb-replicaset/
 version: '3.7'
 
 services:
-  mongo:
-    image: mongo
-    restart: always
-    environment: 
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-  
-  mongo-express:
-    image: mongo-express
-    restart: always
+  mongo-primary:
+    container_name: mongo-primary
+    image: mongo:latest
+    volumes: 
+      - $HOME/data/rs1:/data/db
     ports: 
-      - 8081:8081
-    environment: 
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      - 27017:27017
+    restart: always
+    command: --replSet mdbDefGuide --oplogSize 200
+  mongo-secondary:
+    container_name: mongo-secondary
+    image: mongo:latest
+    volumes: 
+      - $HOME/data/rs2:/data/db
+    ports: 
+      - 27018:27017
+    restart: always
+    command: --replSet mdbDefGuide --oplogSize 200
+  mongo-secondary2:
+    container_name: mongo-secondary2
+    image: mongo:latest
+    volumes: 
+      - $HOME/data/rs3:/data/db
+    ports: 
+      - 27019:27017
+    restart: always
+    command: --replSet mdbDefGuide --oplogSize 200
     
