@@ -3,8 +3,8 @@
 version: '3.7'
 
 services:
-  mongo-primary:
-    container_name: mongo-primary
+  mongo-member1:
+    container_name: mongo-member1
     image: mongo:latest
     volumes: 
       - $HOME/data/rs1:/data/db
@@ -12,8 +12,8 @@ services:
       - 27017:27017
     restart: always
     command: --replSet mdbDefGuide --oplogSize 200
-  mongo-secondary:
-    container_name: mongo-secondary
+  mongo-member2:
+    container_name: mongo-member2
     image: mongo:latest
     volumes: 
       - $HOME/data/rs2:/data/db
@@ -21,13 +21,22 @@ services:
       - 27018:27017
     restart: always
     command: --replSet mdbDefGuide --oplogSize 200
-  mongo-secondary2:
-    container_name: mongo-secondary2
+  mongo-member3:
+    container_name: mongo-member3
     image: mongo:latest
     volumes: 
       - $HOME/data/rs3:/data/db
     ports: 
       - 27019:27017
+    restart: always
+    command: --replSet mdbDefGuide --oplogSize 200
+  mongo-member4:
+    container_name: mongo-member4
+    image: mongo:latest
+    volumes: 
+      - $HOME/data/rs4:/data/db
+    ports: 
+      - 27020:27017
     restart: always
     command: --replSet mdbDefGuide --oplogSize 200
     
