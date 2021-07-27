@@ -6,13 +6,16 @@ config = {
   "_id": "mdbDefGuide",
   "members": [{
     "_id": 0,
-    "host": "mongo-primary"
+    "host": "mongo-member1"
   }, {
     "_id": 1,
-    "host": "mongo-secondary"
+    "host": "mongo-member2"
   }, {
     "_id": 2,
-    "host": "mongo-secondary2",
+    "host": "mongo-member3",
+  }, {
+    "_id": 3,
+    "host": "mongo-member4",
   }]
 }
 
