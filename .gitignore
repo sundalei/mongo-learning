@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### data and log for mongod
+demo-shard/csrs/
+demo-shard/router/
+demo-shard/sh01/
+demo-shard/sh02/
