@@ -37,3 +37,8 @@ demo-shard/csrs/
 demo-shard/router/
 demo-shard/sh01/
 demo-shard/sh02/
+
+data/csrs/
+data/router/
+data/sh01/
+data/sh02/
