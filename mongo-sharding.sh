@@ -1,9 +1,4 @@
 # clean up.
-echo 'kill existing processes.'
-killall mongod
-killall mongos
-
-sleep 15s
 
 echo 'remove data files.'
 rm -rf data
@@ -13,7 +8,8 @@ echo 'create folder structure for config servers.'
 mkdir -p data/csrs/csrs{1,2,3}/{db,log} \
          data/sh01/sh01{1,2,3}/{db,log} \
          data/sh02/sh02{1,2,3}/{db,log} \
-         data/router/log 、
+         data/sh03/sh03{1,2,3}/{db,log} \
+         data/router/log \
 
 # start config servers.
 echo 'start config servers.'
@@ -50,6 +46,12 @@ mongod --shardsvr --replSet sh02 --bind_ip_all --dbpath data/sh02/sh021/db/ --lo
 mongod --shardsvr --replSet sh02 --bind_ip_all --dbpath data/sh02/sh022/db/ --logpath data/sh02/sh022/log/sh022.log --logappend --port 30007 --fork
 mongod --shardsvr --replSet sh02 --bind_ip_all --dbpath data/sh02/sh023/db/ --logpath data/sh02/sh023/log/sh023.log --logappend --port 30008 --fork
 
+# start shard 03
+echo 'start shard 03.'
+mongod --shardsvr --replSet sh03 --bind_ip_all --dbpath data/sh03/sh031/db/ --logpath data/sh03/sh031/log/sh031.log --logappend --port 30020 --fork
+mongod --shardsvr --replSet sh03 --bind_ip_all --dbpath data/sh03/sh032/db/ --logpath data/sh03/sh032/log/sh032.log --logappend --port 30021 --fork
+mongod --shardsvr --replSet sh03 --bind_ip_all --dbpath data/sh03/sh033/db/ --logpath data/sh03/sh033/log/sh033.log --logappend --port 30022 --fork
+
 sleep 15s
 
 # config shard 01
@@ -74,11 +76,26 @@ config = { _id: "sh02", members:[
 rs.initiate(config)
 EOF
 
-# add shard 01 and shard 02 to config server
+sleep 15s
+
+# config shard 03
+echo 'config shard 03.'
+mongo --port 30020 << 'EOF'
+config = { _id: "sh03", members:[
+          { _id : 0, host : "localhost:30020" },
+          { _id : 1, host : "localhost:30021" },
+          { _id : 2, host : "localhost:30022" }]};
+rs.initiate(config)
+EOF
+
+sleep 15s
+
+# add shards to config server
 echo 'add shards 01 and 02.'
 mongosh --port 30009 << 'EOF'
 db.adminCommand( { addshard : "sh01/"+"localhost:30003" } );
 db.adminCommand( { addshard : "sh02/"+"localhost:30006" } );
+db.adminCommand( { addshard : "sh03/"+"localhost:30020" } );
 sh.status();
 EOF
 
